@@ -43,6 +43,35 @@ public class AuthService {
         return sb.toString();
     }
 
+    private String generateResetToken() {
+        // reuse numeric code for simplicity; can switch to UUID
+        return generateNumericCode(6);
+    }
+
+    public void requestPasswordReset(String email) {
+        Optional<Owner> opt = ownerRepository.findByEmail(email);
+        if (opt.isEmpty()) return; // do not reveal user existence
+        Owner o = opt.get();
+        o.setVerificationCode(generateResetToken());
+        o.setVerificationExpiry(LocalDateTime.now().plusMinutes(10));
+        ownerRepository.save(o);
+        log.info("[FORGOT PASSWORD] email={} token={}", o.getEmail(), o.getVerificationCode());
+        emailService.sendPlainText(o.getEmail(), "Reset your PetCare password",
+                "Your reset code is: " + o.getVerificationCode() + " (expires in 10 minutes)");
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        Optional<Owner> opt = ownerRepository.findByVerificationCode(token);
+        if (opt.isEmpty()) throw new IllegalArgumentException("Invalid token");
+        Owner o = opt.get();
+        if (o.getVerificationExpiry() == null || LocalDateTime.now().isAfter(o.getVerificationExpiry()))
+            throw new IllegalArgumentException("Token expired");
+        o.setPasswordHash(passwordEncoder.encode(newPassword));
+        o.setVerificationCode(null);
+        o.setVerificationExpiry(null);
+        ownerRepository.save(o);
+    }
+
     public AuthResponse register(RegisterRequest registerRequest) {
         // Check if email already exists
         if (ownerRepository.existsByEmail(registerRequest.getEmail())) {

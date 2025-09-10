@@ -20,3 +20,5 @@ public class InviteRequest {
     public FamilyRole getRole() { return role; }
     public void setRole(FamilyRole role) { this.role = role; }
 }
+
+

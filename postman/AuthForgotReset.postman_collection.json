@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "Pet Care - Auth Forgot/Reset Password",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "9f0a1c2b-6a1e-42d7-9c63-0a2f1a7e55ab"
+  },
+  "item": [
+    {
+      "name": "Forgot Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Message present', function () { pm.expect(pm.response.json().message).to.match(/reset code|OK|sent/i); });",
+              "pm.environment.set('lastForgotEmail', pm.variables.get('email'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/forgot-password",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "forgot-password"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\"\n}"
+        }
+      },
+      "variable": [{ "key": "email", "value": "user@example.com" }]
+    },
+    {
+      "name": "Reset Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Password reset OK', function () { pm.expect(pm.response.json().message).to.match(/reset|success/i); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/reset-password",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "reset-password"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{resetToken}}\",\n  \"newPassword\": \"NewStrongPass123!\"\n}"
+        }
+      },
+      "variable": [
+        { "key": "resetToken", "value": "<paste-token-from-console>" }
+      ]
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }]
+}

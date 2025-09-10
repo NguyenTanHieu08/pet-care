@@ -18,6 +18,9 @@ import java.nio.file.StandardCopyOption;
 
 import java.util.List;
 
+import com.hieusrpingboot.petcare.entity.PetPhoto;
+import com.hieusrpingboot.petcare.repository.PetPhotoRepository;
+
 @RestController
 @RequestMapping("/api/pets")
 @CrossOrigin(origins = "*")
@@ -26,6 +29,9 @@ public class PetController extends BaseController {
 
     @Autowired
     private PetService petService;
+
+    @Autowired
+    private PetPhotoRepository petPhotoRepository;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Pet>> createPet(@Valid @RequestBody PetRequest petRequest) {
@@ -223,6 +229,12 @@ public class PetController extends BaseController {
             String photoUrl = "/" + uploadsDir + "/" + filename;
             pet.setPhotoUrl(photoUrl);
             Pet saved = petService.updatePet(pet, id);
+
+            PetPhoto galleryItem = new PetPhoto();
+            galleryItem.setPetId(id);
+            galleryItem.setUrl(photoUrl);
+            petPhotoRepository.save(galleryItem);
+
             return success("Photo uploaded", saved);
         } catch (RuntimeException e) {
             return notFound("Pet not found");
@@ -230,6 +242,29 @@ public class PetController extends BaseController {
             return internalServerError("Failed to save file: " + e.getMessage());
         } catch (Exception e) {
             return internalServerError("Upload failed: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/photos")
+    public ResponseEntity<ApiResponse<List<PetPhoto>>> listPhotos(@PathVariable Long id) {
+        try {
+            List<PetPhoto> items = petPhotoRepository.findByPetIdOrderByCreatedAtDesc(id);
+            return success("OK", items);
+        } catch (Exception e) {
+            return internalServerError("Failed to list photos: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{petId}/photos/{photoId}")
+    public ResponseEntity<ApiResponse<String>> deletePhoto(@PathVariable Long petId, @PathVariable Long photoId) {
+        try {
+            if (!petPhotoRepository.existsById(photoId)) {
+                return notFound("Photo not found");
+            }
+            petPhotoRepository.deleteById(photoId);
+            return success("Deleted", "OK");
+        } catch (Exception e) {
+            return internalServerError("Failed to delete photo: " + e.getMessage());
         }
     }
 }

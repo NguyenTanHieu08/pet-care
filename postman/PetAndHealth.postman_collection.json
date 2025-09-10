@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "Pet Care - Pets & Health Records",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "b8b2b7e1-3a6a-4f3a-8a09-0f0e2f7a1c11"
+  },
+  "item": [
+    {
+      "name": "Pets - Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201/200', () => pm.expect([200,201]).to.include(pm.response.code));",
+              "pm.test('Has data', () => pm.expect(pm.response.json().data).to.exist);",
+              "pm.collectionVariables.set('petId', pm.response.json().data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/pets",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ownerId\": 1,\n  \"name\": \"Milo\",\n  \"species\": \"Dog\",\n  \"breed\": \"Corgi\",\n  \"age\": 2,\n  \"gender\": \"MALE\",\n  \"photoUrl\": null\n}"
+        }
+      }
+    },
+    {
+      "name": "Pets - Get by Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/pets/{{petId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets", "{{petId}}"]
+        }
+      }
+    },
+    {
+      "name": "Pets - Update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/pets/{{petId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets", "{{petId}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ownerId\": 1,\n  \"name\": \"Milo Updated\",\n  \"species\": \"Dog\",\n  \"breed\": \"Corgi\",\n  \"age\": 3,\n  \"gender\": \"MALE\",\n  \"photoUrl\": null\n}"
+        }
+      }
+    },
+    {
+      "name": "Pets - List by Owner",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/pets/owner/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets", "owner", "1"]
+        }
+      }
+    },
+    {
+      "name": "Pets - Upload Main Photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "multipart/form-data" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/pets/{{petId}}/photo",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets", "{{petId}}", "photo"]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": ["/absolute/path/to/sample.jpg"]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pets - List Gallery Photos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/pets/{{petId}}/photos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pets", "{{petId}}", "photos"]
+        }
+      }
+    },
+    {
+      "name": "Health - Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200,201]).to.include(pm.response.code));",
+              "pm.collectionVariables.set('healthId', pm.response.json().data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/health-records",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health-records"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"petId\": {{petId}},\n  \"vetId\": 1,\n  \"visitDate\": \"2025-01-01T10:00:00\",\n  \"diagnosis\": \"Checkup\",\n  \"treatment\": \"Vitamins\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Health - Get by Id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/health-records/{{healthId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health-records", "{{healthId}}"]
+        }
+      }
+    },
+    {
+      "name": "Health - List by Pet",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/health-records/pet/{{petId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health-records", "pet", "{{petId}}"]
+        }
+      }
+    },
+    {
+      "name": "Health - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/health-records/{{healthId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health-records", "{{healthId}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": {{healthId}},\n  \"petId\": {{petId}},\n  \"vetId\": 1,\n  \"visitDate\": \"2025-01-02T10:00:00\",\n  \"diagnosis\": \"Checkup Updated\",\n  \"treatment\": \"Supplements\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Health - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/health-records/{{healthId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health-records", "{{healthId}}"]
+        }
+      }
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }]
+}

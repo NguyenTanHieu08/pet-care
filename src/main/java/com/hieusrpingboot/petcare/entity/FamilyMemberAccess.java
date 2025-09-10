@@ -68,3 +68,5 @@ public class FamilyMemberAccess {
     public LocalDateTime getRevokedAt() { return revokedAt; }
     public void setRevokedAt(LocalDateTime revokedAt) { this.revokedAt = revokedAt; }
 }
+
+

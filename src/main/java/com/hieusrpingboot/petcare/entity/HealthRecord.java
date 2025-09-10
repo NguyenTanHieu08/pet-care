@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "health_records")
@@ -41,10 +42,12 @@ public class HealthRecord {
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Pet pet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vet_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Owner vet;
 
     // Constructors

@@ -15,3 +15,5 @@ public interface FamilyMemberAccessRepository extends JpaRepository<FamilyMember
     Optional<FamilyMemberAccess> findByOwnerIdAndMemberUserId(Long ownerId, Long memberUserId);
     boolean existsByOwnerIdAndMemberUserIdAndRole(Long ownerId, Long memberUserId, FamilyRole role);
 }
+
+
