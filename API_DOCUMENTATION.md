@@ -1,8 +1,8 @@
 # Pet Care API Documentation
 
-## Tổng quan
+## Overview
 
-API này cung cấp các tính năng quản lý thú cưng bao gồm đăng ký/đăng nhập người dùng, quản lý thông tin thú cưng, và các tính năng khác.
+This API provides pet management features including user registration/login, pet information management, and other functionalities.
 
 ## Base URL
 
@@ -12,7 +12,7 @@ http://localhost:8080/api
 
 ## 1. Authentication APIs
 
-### 1.1 Đăng ký người dùng
+### 1.1 User Registration
 
 **POST** `/auth/register`
 
@@ -44,7 +44,7 @@ http://localhost:8080/api
 }
 ```
 
-### 1.2 Đăng nhập
+1.2 User Login
 
 **POST** `/auth/login`
 
@@ -91,8 +91,7 @@ http://localhost:8080/api
 }
 ```
 
-### 1.4 Cập nhật thông tin người dùng
-
+1.4 Update User Info
 **PUT** `/auth/user/{userId}`
 
 **Request Body:**
@@ -108,9 +107,8 @@ http://localhost:8080/api
 }
 ```
 
-## 2. Pet Management APIs
-
-### 2.1 Tạo thú cưng mới
+2. Pet Management APIs
+   2.1 Create a New Pet
 
 **POST** `/pets`
 
@@ -143,7 +141,7 @@ http://localhost:8080/api
 }
 ```
 
-### 2.2 Tạo nhiều thú cưng cùng lúc
+### 2.2 Create Multiple Pets
 
 **POST** `/pets/batch`
 
@@ -172,7 +170,7 @@ http://localhost:8080/api
 ]
 ```
 
-### 2.3 Lấy thông tin thú cưng theo ID
+###2.3 Get Pet by ID
 
 **GET** `/pets/{id}`
 
@@ -191,7 +189,7 @@ http://localhost:8080/api
 }
 ```
 
-### 2.4 Cập nhật thông tin thú cưng
+### 2.4 Update Pet Info
 
 **PUT** `/pets/{id}`
 
@@ -209,7 +207,7 @@ http://localhost:8080/api
 }
 ```
 
-### 2.5 Xóa thú cưng
+### 2.5 Delete Pet
 
 **DELETE** `/pets/{id}`
 
@@ -246,113 +244,40 @@ http://localhost:8080/api
 ]
 ```
 
-### 2.7 Lấy danh sách thú cưng theo loài
+### Get Pets by Species
 
 **GET** `/pets/species/{species}`
 
-### 2.8 Lấy danh sách thú cưng theo giống
+### Get Pets by Breed
 
 **GET** `/pets/breed/{breed}`
 
-### 2.9 Lấy tất cả thú cưng
+###2.9 Get All Pets
 
 **GET** `/pets`
 
-## 3. Các tính năng đã implement
+3. Implemented Features
 
-### ✅ Đăng ký và Đăng nhập Người dùng
+-----User Registration and Login---------
 
-- Chủ vật nuôi có thể đăng ký với thông tin: tên, email, mật khẩu, số điện thoại, địa chỉ
-- Hệ thống xác thực email duy nhất
-- Mã hóa mật khẩu bằng BCrypt
-- Đăng nhập an toàn với email và mật khẩu
-- Cập nhật thông tin cá nhân
+-Owners can register with name, email, password, phone, address
 
-### ✅ Quản lý Hồ sơ Thú cưng
+-System enforces unique email
 
-- Thêm, sửa, xóa, xem thông tin thú cưng
-- Quản lý nhiều thú cưng cho một chủ sở hữu
-- Thông tin thú cưng bao gồm: tên, loài, giống, tuổi, giới tính, ảnh
-- API hỗ trợ tạo nhiều thú cưng cùng lúc
-- Tìm kiếm thú cưng theo loài, giống
+-Passwords encrypted with BCrypt
 
-## 4. Cấu trúc Database
+-Secure login with email and password
 
-### Bảng `owners`
+-Ability to update profile information
 
-- `id` (Primary Key)
-- `name` (Tên chủ sở hữu)
-- `email` (Email - unique)
-- `password_hash` (Mật khẩu đã mã hóa)
-- `phone` (Số điện thoại)
-- `address` (Địa chỉ)
-- `role` (Vai trò: OWNER, VET, SHELTER, ADMIN)
+------Pet Profile Management----------
 
-### Bảng `pets`
+-Add, edit, delete, and view pet details
 
-- `id` (Primary Key)
-- `owner_id` (Foreign Key → owners)
-- `name` (Tên thú cưng)
-- `species` (Loài)
-- `breed` (Giống)
-- `age` (Tuổi)
-- `gender` (Giới tính: MALE, FEMALE, UNKNOWN)
-- `photo_url` (URL ảnh)
+-Manage multiple pets per owner
 
-## 5. Cách chạy ứng dụng
+-Pet info includes: name, species, breed, age, gender, photo
 
-1. **Cài đặt MySQL:**
+-API supports batch pet creation
 
-   - Tạo database `petcare_db`
-   - Cập nhật thông tin kết nối trong `application.properties`
-
-2. **Chạy ứng dụng:**
-
-   ```bash
-   mvn spring-boot:run
-   ```
-
-3. **Truy cập API:**
-   - Base URL: `http://localhost:8080/api`
-   - Swagger UI: `http://localhost:8080/swagger-ui.html` (nếu có)
-
-## 6. Ví dụ sử dụng với cURL
-
-### Đăng ký người dùng:
-
-```bash
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Nguyễn Văn A",
-    "email": "nguyenvana@email.com",
-    "password": "password123",
-    "phone": "0123456789",
-    "address": "123 Đường ABC, Quận 1, TP.HCM"
-  }'
-```
-
-### Tạo thú cưng:
-
-```bash
-curl -X POST http://localhost:8080/api/pets \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ownerId": 1,
-    "name": "Buddy",
-    "species": "Chó",
-    "breed": "Golden Retriever",
-    "age": 3,
-    "gender": "MALE",
-    "photoUrl": "https://example.com/buddy.jpg"
-  }'
-```
-
-## 7. Lưu ý
-
-- Tất cả API đều hỗ trợ CORS
-- Validation được áp dụng cho tất cả input
-- Mật khẩu được mã hóa bằng BCrypt
-- Database sẽ tự động tạo bảng khi chạy ứng dụng lần đầu
-- Có thể mở rộng thêm JWT authentication trong tương lai
-
+-Search pets by species, breed

@@ -14,3 +14,4 @@ public interface CareLogRepository extends JpaRepository<CareLog, Long> {
 }
 
 
+
