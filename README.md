@@ -48,4 +48,10 @@ Dưới đây là danh sách các REST API đã được triển khai trong dự
 - **GET** `/breed/{breed}`
 - **POST** `/{id}/photo` (consumes `multipart/form-data`)
 
+### Family Sharing (`/api/family`)
 
+- **POST** `/invitations`
+- **POST** `/invitations/accept`
+- **GET** `/members?ownerId={ownerId}`
+- **PUT** `/members/{id}/role`
+- **DELETE** `/members/{id}`
