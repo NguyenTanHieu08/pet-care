@@ -10,3 +10,5 @@ import java.util.List;
 public interface PetPhotoRepository extends JpaRepository<PetPhoto, Long> {
     List<PetPhoto> findByPetIdOrderByCreatedAtDesc(Long petId);
 }
+
+

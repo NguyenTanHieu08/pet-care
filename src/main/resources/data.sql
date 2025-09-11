@@ -7,3 +7,5 @@ VALUES
   (1, NULL, 'pending@example.com', 'VIEW_ONLY', 'INVITED', 'SAMPLETOKEN123', CURRENT_TIMESTAMP);
 
 
+
+

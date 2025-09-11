@@ -98,42 +98,22 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            AuthResponse response = authService.login(loginRequest);
+            AuthResponse authResponse = authService.login(loginRequest);
             
-            if (response.getMessage() != null && response.getMessage().contains("Invalid")) {
+            if (authResponse.getMessage() != null && authResponse.getMessage().contains("Invalid")) {
                 return unauthorized("Invalid email or password");
             }
             
+            // Chỉ trả về token và role, bỏ các thông tin khác
+            LoginResponse response = new LoginResponse(authResponse.getToken(), authResponse.getRole());
             return success("Login successful", response);
                 
         } catch (IllegalArgumentException e) {
             return badRequest(e.getMessage());
         } catch (Exception e) {
             return internalServerError("Login failed: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest body) {
-        try {
-            authService.requestPasswordReset(body.getEmail());
-            return success("If the email exists, a reset code has been sent", "OK");
-        } catch (Exception e) {
-            return internalServerError("Forgot password failed: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<String>> resetPassword(@Valid @RequestBody ResetPasswordRequest body) {
-        try {
-            authService.resetPassword(body.getToken(), body.getNewPassword());
-            return success("Password reset successfully", "OK");
-        } catch (IllegalArgumentException e) {
-            return badRequest(e.getMessage());
-        } catch (Exception e) {
-            return internalServerError("Reset password failed: " + e.getMessage());
         }
     }
 

@@ -4,11 +4,22 @@ import com.hieusrpingboot.petcare.enums.FamilyRole;
 import jakarta.validation.constraints.NotNull;
 
 public class UpdateMemberRoleRequest {
-    @NotNull
+    @NotNull(message = "Role is required")
     private FamilyRole role;
 
-    public FamilyRole getRole() { return role; }
-    public void setRole(FamilyRole role) { this.role = role; }
+    // Constructors
+    public UpdateMemberRoleRequest() {}
+
+    public UpdateMemberRoleRequest(FamilyRole role) {
+        this.role = role;
+    }
+
+    // Getters and Setters
+    public FamilyRole getRole() {
+        return role;
+    }
+
+    public void setRole(FamilyRole role) {
+        this.role = role;
+    }
 }
-
-

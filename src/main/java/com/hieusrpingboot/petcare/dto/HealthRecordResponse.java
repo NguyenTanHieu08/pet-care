@@ -1,111 +1,47 @@
-package com.hieusrpingboot.petcare.entity;
+package com.hieusrpingboot.petcare.dto;
 
 import com.hieusrpingboot.petcare.enums.HealthRecordType;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-@Table(name = "health_records")
-public class HealthRecord {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class HealthRecordResponse {
     private Long id;
-
-    @NotNull(message = "Pet ID is required")
-    @Column(name = "pet_id", nullable = false)
     private Long petId;
-
-    @NotNull(message = "Vet ID is required")
-    @Column(name = "vet_id", nullable = false)
     private Long vetId;
-
-    @NotNull(message = "Visit date is required")
-    @Column(name = "visit_date", nullable = false)
     private LocalDateTime visitDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "record_type", nullable = false)
     private HealthRecordType recordType;
-
-    @NotBlank(message = "Diagnosis is required")
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String diagnosis;
-
-    @Column(columnDefinition = "TEXT")
     private String treatment;
-
+    
     // Thông tin tiêm chủng
-    @Column(name = "vaccine_type")
     private String vaccineType;
-
-    @Column(name = "vaccine_batch")
     private String vaccineBatch;
-
-    @Column(name = "next_vaccination_date")
     private LocalDateTime nextVaccinationDate;
-
+    
     // Thông tin dị ứng
-    @Column(name = "allergy_type")
-    private String allergyType; // THUOC, THUC_AN, KHAC
-
-    @Column(name = "allergy_description", columnDefinition = "TEXT")
+    private String allergyType;
     private String allergyDescription;
-
+    
     // Thông tin thuốc men
-    @Column(name = "medication_name")
     private String medicationName;
-
-    @Column(name = "medication_dosage")
     private String medicationDosage;
-
-    @Column(name = "medication_frequency")
     private String medicationFrequency;
-
-    @Column(name = "medication_duration")
     private String medicationDuration;
-
+    
     // Thông tin bác sĩ
-    @Column(name = "doctor_name")
     private String doctorName;
-
-    @Column(name = "clinic_name")
     private String clinicName;
-
-    @Column(name = "notes", columnDefinition = "TEXT")
+    
     private String notes;
-
-    @ElementCollection
-    @CollectionTable(name = "health_record_attachments", joinColumns = @JoinColumn(name = "health_record_id"))
-    @Column(name = "attachment_url")
-    private List<String> attachments = new ArrayList<>();
-
-    // Relationships
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private Pet pet;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vet_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private Owner vet;
+    private List<String> attachments;
+    
+    // Thông tin bổ sung cho response
+    private String petName;
+    private String vetName;
+    private String vetEmail;
 
     // Constructors
-    public HealthRecord() {}
-
-    public HealthRecord(Long petId, Long vetId, LocalDateTime visitDate, HealthRecordType recordType, String diagnosis, String treatment) {
-        this.petId = petId;
-        this.vetId = vetId;
-        this.visitDate = visitDate;
-        this.recordType = recordType;
-        this.diagnosis = diagnosis;
-        this.treatment = treatment;
-    }
+    public HealthRecordResponse() {}
 
     // Getters and Setters
     public Long getId() {
@@ -140,6 +76,14 @@ public class HealthRecord {
         this.visitDate = visitDate;
     }
 
+    public HealthRecordType getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(HealthRecordType recordType) {
+        this.recordType = recordType;
+    }
+
     public String getDiagnosis() {
         return diagnosis;
     }
@@ -154,39 +98,6 @@ public class HealthRecord {
 
     public void setTreatment(String treatment) {
         this.treatment = treatment;
-    }
-
-    public List<String> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<String> attachments) {
-        this.attachments = attachments;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Owner getVet() {
-        return vet;
-    }
-
-    public void setVet(Owner vet) {
-        this.vet = vet;
-    }
-
-    // Getters and Setters for new fields
-    public HealthRecordType getRecordType() {
-        return recordType;
-    }
-
-    public void setRecordType(HealthRecordType recordType) {
-        this.recordType = recordType;
     }
 
     public String getVaccineType() {
@@ -283,5 +194,37 @@ public class HealthRecord {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public List<String> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<String> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getPetName() {
+        return petName;
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    public String getVetName() {
+        return vetName;
+    }
+
+    public void setVetName(String vetName) {
+        this.vetName = vetName;
+    }
+
+    public String getVetEmail() {
+        return vetEmail;
+    }
+
+    public void setVetEmail(String vetEmail) {
+        this.vetEmail = vetEmail;
     }
 }
